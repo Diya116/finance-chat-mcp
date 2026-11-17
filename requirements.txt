@@ -1,0 +1,10 @@
+mcp[cli]<2
+httpx
+fastapi
+uvicorn
+sqlalchemy>=2.0
+jinja2
+python-multipart
+itsdangerous
+python-dotenv
+psycopg[binary]

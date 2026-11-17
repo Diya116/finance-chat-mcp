@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="card">
+  <p style="margin:0">Spent in {{ summary.month }}</p>
+  <div class="big">{{ "%.2f"|format(summary.total) }}</div>
+  {% if summary.by_category %}
+  <table>
+    <tr><th>Category</th><th class="num">Entries</th><th class="num">Total</th></tr>
+    {% for row in summary.by_category %}
+      <tr><td>{{ row.category }}</td><td class="num">{{ row.count }}</td>
+          <td class="num">{{ "%.2f"|format(row.total) }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}
+    <p>No expenses yet. Tell Claude: "I spent 120 on lunch".</p>
+  {% endif %}
+</div>
+
+{% if budgets %}
+<div class="card">
+  <h2>Budgets</h2>
+  <table>
+    <tr><th>Category</th><th class="num">Spent</th><th class="num">Limit</th><th class="num">Left</th></tr>
+    {% for b in budgets %}
+      <tr>
+        <td>{{ b.category }}</td>
+        <td class="num">{{ "%.2f"|format(b.spent) }}</td>
+        <td class="num">{{ "%.2f"|format(b.monthly_limit) }}</td>
+        <td class="num {{ 'over' if b.over_budget else 'ok' }}">{{ "%.2f"|format(b.remaining) }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% if expenses %}
+<div class="card">
+  <h2>Recent expenses</h2>
+  <table>
+    <tr><th>Date</th><th>Category</th><th>Note</th><th class="num">Amount</th></tr>
+    {% for e in expenses %}
+      <tr><td>{{ e.spent_on }}</td><td>{{ e.category }}</td><td>{{ e.note }}</td>
+          <td class="num">{{ "%.2f"|format(e.amount) }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Connected apps</h2>
+  {% for app in connected %}
+    <form method="post" action="/apps/{{ app.client_id }}/revoke" style="display:flex; justify-content:space-between; align-items:center; margin:6px 0">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <span>{{ app.client_name }}</span>
+      <button class="danger" type="submit">Revoke access</button>
+    </form>
+  {% else %}
+    <p>No apps connected yet. Add this URL as a connector in Claude:</p>
+    <span class="copy">{{ mcp_url }}</span>
+  {% endfor %}
+</div>
+{% endblock %}

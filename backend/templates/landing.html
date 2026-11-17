@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Track your money by chatting</h1>
+  <p>Tell Claude "I spent 450 on groceries" or "Am I over budget on food?" and it just works.
+     No forms, no app to open.</p>
+  <div class="actions">
+    {% if user %}
+      <a class="btn" href="/dashboard">Go to dashboard</a>
+    {% else %}
+      <a class="btn" href="/signup">Create account</a>
+      <a class="btn secondary" href="/login">Log in</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <h2>How to connect</h2>
+  <ol>
+    <li>Create an account here.</li>
+    <li>In <b>Claude</b>: Settings → Connectors → <b>Add custom connector</b> → paste this URL:<br>
+        <span class="copy">{{ mcp_url }}</span></li>
+    <li>Claude opens a login page → click <b>Allow</b>. Done.</li>
+    <li>Claude Code: <span class="copy">claude mcp add --transport http finance {{ mcp_url }}</span>,
+        then run <code>/mcp</code> and choose Authenticate.</li>
+  </ol>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Allow access{% endblock %}
+{% block content %}
+<div class="card">
+  <h1>Allow access?</h1>
+  <p><b>{{ client.client_name }}</b> wants to access your Finance Chat account
+     (<b>{{ user.email }}</b>).</p>
+  <p>It will be able to <b>add, view and delete your expenses and set budgets</b>. It will not see your password.
+     You can revoke access any time from your dashboard.</p>
+  <form method="post" action="/oauth/authorize">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    {% for name, value in fields.items() %}
+      <input type="hidden" name="{{ name }}" value="{{ value }}">
+    {% endfor %}
+    <div class="actions">
+      <button type="submit" name="decision" value="approve">Allow</button>
+      <button type="submit" name="decision" value="deny" class="secondary">Deny</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
